@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EscolaSync.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Primary">#1565C0</Color>
+            <Color x:Key="PrimaryDark">#0D47A1</Color>
+            <Color x:Key="Secondary">#42A5F5</Color>
+            <Color x:Key="Background">#F5F7FA</Color>
+            <Color x:Key="Surface">#FFFFFF</Color>
+            <Color x:Key="OnPrimary">#FFFFFF</Color>
+            <Color x:Key="Error">#D32F2F</Color>
+            <Color x:Key="Success">#388E3C</Color>
+            <Color x:Key="TextPrimary">#212121</Color>
+            <Color x:Key="TextSecondary">#757575</Color>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.escolasync.app">
+
+    <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="36" />
+
+    <!-- Leitura de fotos (Android 13+) -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <!-- Leitura de armazenamento externo (Android 12 e abaixo) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+                     android:maxSdkVersion="32" />
+
+    <!-- Escrita (necessária para deletar no Android 10 e abaixo) -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+                     android:maxSdkVersion="29" />
+
+    <!-- Gerenciar media (permite deletar arquivos de outros apps no Android 11+) -->
+    <uses-permission android:name="android.permission.MANAGE_MEDIA" />
+
+    <!-- Internet para o Google Drive -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application android:allowBackup="true"
+                 android:icon="@mipmap/appicon"
+                 android:roundIcon="@mipmap/appicon_round"
+                 android:supportsRtl="true"
+                 android:label="EscolaSync">
+
+        <!-- Necessário para o fluxo OAuth2 abrir o browser e retornar ao app -->
+        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity"
+                  android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Substitua com o seu Client ID do Google Cloud Console -->
+                <data android:scheme="com.googleusercontent.apps.SEU_CLIENT_ID" />
+            </intent-filter>
+        </activity>
+
+    </application>
+</manifest>
