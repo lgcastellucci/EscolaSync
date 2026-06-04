@@ -8,6 +8,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
+    <!-- Define como executável Android, não biblioteca -->
+    <OutputType>Exe</OutputType>
+
     <!-- App Info -->
     <ApplicationTitle>EscolaSync</ApplicationTitle>
     <ApplicationId>com.escolasync.app</ApplicationId>
@@ -16,6 +19,23 @@
 
     <!-- API 36 para .NET 10 MAUI -->
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
+
+    <!-- Corrige XACAF7009: compressão de assemblies no Release -->
+    <AndroidUseAssemblyStore>false</AndroidUseAssemblyStore>
+    <AndroidEnableAssemblyCompression>false</AndroidEnableAssemblyCompression>
+
+    <!-- Suprime warnings XC0022 de compiled bindings -->
+    <NoWarn>$(NoWarn);XC0022</NoWarn>
+  </PropertyGroup>
+
+  <!-- Configurações específicas do Release para gerar APK -->
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <AndroidUseAapt2>True</AndroidUseAapt2>
+    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+    <RunAOTCompilation>false</RunAOTCompilation>
+    <AndroidEnableLLVM>false</AndroidEnableLLVM>
   </PropertyGroup>
 
   <ItemGroup>
