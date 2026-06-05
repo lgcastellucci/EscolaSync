@@ -13,8 +13,6 @@ public class MainViewModel : INotifyPropertyChanged
     private readonly DriveUploadService _driveService;
     private readonly MediaStoreService _mediaService;
 
-    // ── Propriedades vinculadas à UI ─────────────────────────────────────────
-
     private bool _isAuthenticated;
     public bool IsAuthenticated
     {
@@ -85,14 +83,10 @@ public class MainViewModel : INotifyPropertyChanged
 
     public ObservableCollection<string> Albums { get; } = new();
 
-    // ── Comandos ─────────────────────────────────────────────────────────────
-
     public ICommand LoginCommand { get; }
     public ICommand LogoutCommand { get; }
     public ICommand SyncCommand { get; }
     public ICommand RefreshAlbumsCommand { get; }
-
-    // ── Construtor ───────────────────────────────────────────────────────────
 
     public MainViewModel(
         GoogleAuthService authService,
@@ -103,25 +97,39 @@ public class MainViewModel : INotifyPropertyChanged
         _driveService = driveService;
         _mediaService = mediaService;
 
-        LoginCommand        = new Command(async () => await LoginAsync(),   () => IsNotBusy);
-        LogoutCommand       = new Command(async () => await LogoutAsync(),  () => IsNotBusy);
-        SyncCommand         = new Command(async () => await SyncAsync(),    () => IsAuthenticated && IsNotBusy);
+        LoginCommand         = new Command(async () => await LoginAsync(),  () => IsNotBusy);
+        LogoutCommand        = new Command(async () => await LogoutAsync(), () => IsNotBusy);
+        SyncCommand          = new Command(async () => await SyncAsync(),   () => IsAuthenticated && IsNotBusy);
         RefreshAlbumsCommand = new Command(() => LoadAlbums());
 
-        LoadAlbums();
+        // NÃO chama LoadAlbums() aqui — sem permissão ainda causa crash no startup
+        // LoadAlbums() é chamado pelo OnAppearing após permissões concedidas
         _ = TryRestoreSessionAsync();
     }
 
-    // ── Métodos ──────────────────────────────────────────────────────────────
+    /// <summary>
+    /// Chamado pela MainPage.OnAppearing após permissões serem solicitadas.
+    /// </summary>
+    public void InitializeAfterPermissions()
+    {
+        LoadAlbums();
+    }
 
     private async Task TryRestoreSessionAsync()
     {
-        bool restored = await _authService.TryRestoreSessionAsync();
-        if (restored)
+        try
         {
-            IsAuthenticated = true;
-            AccountLabel = "Conta Drive conectada ✓";
-            ShowStatus("Sessão restaurada com sucesso", "#388E3C");
+            bool restored = await _authService.TryRestoreSessionAsync();
+            if (restored)
+            {
+                IsAuthenticated = true;
+                AccountLabel = "Conta Drive conectada ✓";
+                ShowStatus("Sessão restaurada com sucesso", "#388E3C");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[VM] TryRestore erro: {ex.Message}");
         }
     }
 
@@ -130,17 +138,23 @@ public class MainViewModel : INotifyPropertyChanged
         IsBusy = true;
         ShowStatus("Abrindo browser para login...", "#1565C0");
 
-        bool ok = await _authService.AuthenticateAsync();
-
-        if (ok)
+        try
         {
-            IsAuthenticated = true;
-            AccountLabel = "Conta Drive conectada ✓";
-            ShowStatus("Login realizado com sucesso!", "#388E3C");
+            bool ok = await _authService.AuthenticateAsync();
+            if (ok)
+            {
+                IsAuthenticated = true;
+                AccountLabel = "Conta Drive conectada ✓";
+                ShowStatus("Login realizado com sucesso!", "#388E3C");
+            }
+            else
+            {
+                ShowStatus("Falha no login. Tente novamente.", "#D32F2F");
+            }
         }
-        else
+        catch (Exception ex)
         {
-            ShowStatus("Falha no login. Tente novamente.", "#D32F2F");
+            ShowStatus($"Erro no login: {ex.Message}", "#D32F2F");
         }
 
         IsBusy = false;
@@ -149,15 +163,22 @@ public class MainViewModel : INotifyPropertyChanged
     private async Task LogoutAsync()
     {
         IsBusy = true;
-        await _authService.LogoutAsync();
-        _driveService.ClearCache();
-        IsAuthenticated = false;
-        AccountLabel = "Nenhuma conta conectada";
-        ShowStatus("Logout realizado.", "#757575");
+        try
+        {
+            await _authService.LogoutAsync();
+            _driveService.ClearCache();
+            IsAuthenticated = false;
+            AccountLabel = "Nenhuma conta conectada";
+            ShowStatus("Logout realizado.", "#757575");
+        }
+        catch (Exception ex)
+        {
+            ShowStatus($"Erro ao sair: {ex.Message}", "#D32F2F");
+        }
         IsBusy = false;
     }
 
-    private void LoadAlbums()
+    public void LoadAlbums()
     {
         try
         {
@@ -166,7 +187,6 @@ public class MainViewModel : INotifyPropertyChanged
             foreach (var a in albums)
                 Albums.Add(a);
 
-            // Pré-seleciona "Escola" se existir
             if (albums.Contains("Escola"))
                 SelectedAlbum = "Escola";
             else if (albums.Count > 0)
@@ -176,6 +196,7 @@ public class MainViewModel : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine($"[VM] LoadAlbums erro: {ex.Message}");
             ShowStatus($"Erro ao listar álbuns: {ex.Message}", "#D32F2F");
         }
     }
@@ -237,12 +258,9 @@ public class MainViewModel : INotifyPropertyChanged
                 if (uploaded)
                 {
                     result.Uploaded++;
-
-                    // Deleta localmente apenas se upload foi confirmado
                     bool deleted = activity != null
                         ? await _mediaService.DeletePhotoAsync(photo, activity)
                         : false;
-
                     if (deleted) result.Deleted++;
                 }
                 else
@@ -255,15 +273,10 @@ public class MainViewModel : INotifyPropertyChanged
             Progress = 100;
 
             if (result.Failed == 0)
-            {
                 ShowStatus($"✓ Concluído! {result.Summary}", "#388E3C");
-            }
             else
-            {
                 ShowStatus($"⚠ Parcial: {result.Summary}", "#FF8F00");
-            }
 
-            // Atualiza contagem
             RefreshPhotoCount();
         }
         catch (Exception ex)
@@ -283,8 +296,6 @@ public class MainViewModel : INotifyPropertyChanged
         StatusColor   = color;
         HasStatus     = true;
     }
-
-    // ── INotifyPropertyChanged ───────────────────────────────────────────────
 
     public event PropertyChangedEventHandler? PropertyChanged;
     protected void OnPropertyChanged([CallerMemberName] string? name = null)

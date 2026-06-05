@@ -14,8 +14,8 @@
     <!-- App Info -->
     <ApplicationTitle>EscolaSync</ApplicationTitle>
     <ApplicationId>com.escolasync.app</ApplicationId>
-    <ApplicationVersion>1</ApplicationVersion>
-    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>2</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
 
     <!-- API 36 para .NET 10 MAUI -->
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
