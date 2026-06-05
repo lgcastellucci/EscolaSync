@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>EscolaSync — Screenshots Play Store</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;500;700&display=swap" rel="stylesheet"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #1A1A2E;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding: 40px;
+    justify-content: center;
+  }
+  .shot-label {
+    font-family: monospace;
+    font-size: 11px;
+    color: #5C7FA8;
+    text-align: center;
+    margin-bottom: 8px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  /* Phone frame — 1080x1920 proporção */
+  .phone {
+    width: 320px;
+    height: 568px;
+    background: #111827;
+    border-radius: 40px;
+    padding: 10px;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 24px 60px rgba(0,0,0,.6);
+    flex-shrink: 0;
+  }
+  .screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 32px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #F0F4F8;
+  }
+
+  /* Status bar */
+  .sb {
+    background: #1565C0;
+    padding: 8px 16px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .sb .time { font-family: monospace; font-size: 11px; font-weight: 500; color: white; }
+  .sb .icons { font-size: 10px; color: white; }
+
+  /* App bar */
+  .ab {
+    background: #1565C0;
+    padding: 8px 16px 12px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(21,101,192,.4);
+  }
+  .ab h1 { font-size: 16px; font-weight: 700; color: white; }
+
+  /* Scroll */
+  .scroll { flex: 1; overflow: hidden; padding: 12px 10px 16px; display: flex; flex-direction: column; gap: 9px; }
+
+  /* Cards */
+  .card {
+    background: white;
+    border-radius: 14px;
+    padding: 11px 13px;
+    border: 1px solid rgba(0,0,0,.05);
+  }
+  .card-lbl { font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #90A4AE; margin-bottom: 6px; }
+
+  /* Header card */
+  .hcard {
+    background: linear-gradient(135deg, #1565C0, #1976D2);
+    border-radius: 14px;
+    padding: 14px 13px;
+    text-align: center;
+  }
+  .hcard h2 { font-size: 18px; font-weight: 700; color: white; }
+  .hcard p  { font-size: 10px; color: rgba(255,255,255,.7); margin-top: 2px; }
+
+  /* Account row */
+  .arow { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+  .av {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+  .aname { font-size: 12px; font-weight: 500; color: #212121; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 2px;
+    font-size: 9px; font-weight: 600;
+    color: #2E7D32; background: #E8F5E9;
+    padding: 1px 6px; border-radius: 20px; margin-top: 1px;
+  }
+
+  /* Btn */
+  .btn-primary {
+    width: 100%; padding: 9px; border-radius: 10px; border: none;
+    background: #1565C0; color: white;
+    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
+  }
+  .btn-outline {
+    width: 100%; padding: 8px; border-radius: 10px;
+    background: transparent; color: #C62828;
+    border: 1.5px solid #C62828;
+    font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600;
+  }
+  .btn-send {
+    width: 100%; padding: 13px; border-radius: 13px; border: none;
+    background: linear-gradient(135deg, #1565C0, #1976D2);
+    color: white; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 700;
+    box-shadow: 0 4px 14px rgba(21,101,192,.35);
+  }
+
+  /* Picker */
+  .picker {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #ECEFF1; border-radius: 8px; padding: 8px 10px;
+    margin: 4px 0;
+  }
+  .picker span { font-size: 12px; font-weight: 500; color: #212121; }
+  .picker .chev { color: #2196F3; font-size: 14px; }
+
+  /* Photo count */
+  .pcount { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #90A4AE; }
+  .dot { width: 5px; height: 5px; border-radius: 50%; background: #2196F3; }
+
+  /* Drive dest */
+  .ddest {
+    display: flex; align-items: center; gap: 8px;
+    background: #E3F2FD; border: 1px solid #BBDEFB;
+    border-radius: 8px; padding: 7px 9px; margin-top: 4px;
+  }
+  .ddest .path { font-size: 11px; font-weight: 600; color: #1565C0; }
+  .ddest .sub  { font-size: 9px; color: #90A4AE; }
+
+  /* Progress */
+  .prog-card { background: white; border-radius: 14px; padding: 11px 13px; border: 1px solid rgba(0,0,0,.05); }
+  .prog-hdr { display: flex; justify-content: space-between; font-size: 10px; color: #90A4AE; margin-bottom: 6px; }
+  .prog-track { background: #ECEFF1; border-radius: 99px; height: 6px; overflow: hidden; }
+  .prog-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #1565C0, #2196F3); }
+
+  /* Result card */
+  .result-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 8px; }
+  .result-item { border-radius: 8px; padding: 8px 4px; text-align: center; }
+  .result-num { font-size: 18px; font-weight: 700; }
+  .result-lbl { font-size: 9px; }
+
+  /* Warning */
+  .warn { background: #FFF8E1; border: 1px solid #FFE082; border-radius: 10px; padding: 8px 10px; font-size: 10px; color: #5D4037; line-height: 1.5; }
+
+  /* Status pills */
+  .pill-info    { background: #E3F2FD; border-radius: 10px; padding: 9px 11px; font-size: 11px; font-weight: 500; color: #1565C0; display: flex; align-items: center; gap: 5px; }
+  .pill-success { background: #E8F5E9; border-radius: 10px; padding: 9px 11px; font-size: 11px; font-weight: 500; color: #2E7D32; display: flex; align-items: center; gap: 5px; }
+</style>
+</head>
+<body>
+
+<!-- SCREENSHOT 1: Tela inicial sem conta -->
+<div>
+  <div class="shot-label">Screenshot 1 — Início</div>
+  <div class="phone"><div class="screen">
+    <div class="sb"><span class="time">9:41</span><span class="icons">▲ ● ▮▮▮</span></div>
+    <div class="ab"><h1>EscolaSync</h1></div>
+    <div class="scroll">
+      <div class="hcard">
+        <h2>📚 EscolaSync</h2>
+        <p>Mova fotos do álbum para o Google Drive</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Conta Google Drive</div>
+        <div class="arow">
+          <div class="av" style="background:#ECEFF1">👤</div>
+          <div><div class="aname" style="color:#90A4AE;font-weight:400">Nenhuma conta conectada</div></div>
+        </div>
+        <button class="btn-primary">🔐 Entrar com Google</button>
+      </div>
+      <div class="card" style="opacity:.4">
+        <div class="card-lbl">Álbum de origem</div>
+        <div class="picker"><span style="color:#90A4AE">Selecione o álbum</span><span class="chev">›</span></div>
+      </div>
+      <button class="btn-send" style="opacity:.3">📤 Enviar Agora</button>
+      <div class="warn">⚠ As fotos serão <strong>removidas do celular</strong> somente após confirmação de upload no Drive.</div>
+    </div>
+  </div></div>
+</div>
+
+<!-- SCREENSHOT 2: Conta conectada, pronto para enviar -->
+<div>
+  <div class="shot-label">Screenshot 2 — Pronto</div>
+  <div class="phone"><div class="screen">
+    <div class="sb"><span class="time">9:43</span><span class="icons">▲ ● ▮▮▮</span></div>
+    <div class="ab"><h1>EscolaSync</h1></div>
+    <div class="scroll">
+      <div class="hcard">
+        <h2>📚 EscolaSync</h2>
+        <p>Mova fotos do álbum para o Google Drive</p>
+      </div>
+      <div class="card" style="border:1.5px solid #C8E6C9">
+        <div class="card-lbl">Conta Google Drive</div>
+        <div class="arow">
+          <div class="av" style="background:#E8F5E9">🟢</div>
+          <div>
+            <div class="aname">escola.backup@gmail.com</div>
+            <div class="badge">✓ Conectado</div>
+          </div>
+        </div>
+        <button class="btn-outline">🚪 Sair da conta</button>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Álbum de origem</div>
+        <div class="picker"><span>📷 Escola</span><span class="chev">›</span></div>
+        <div class="pcount"><div class="dot"></div>47 fotos no álbum</div>
+        <div class="ddest">
+          <span style="font-size:16px">📁</span>
+          <div><div class="sub">Destino no Drive</div><div class="path">Google Drive → "Escola"</div></div>
+        </div>
+      </div>
+      <button class="btn-send">📤 Enviar Agora</button>
+      <div class="warn">⚠ As fotos serão <strong>removidas do celular</strong> somente após confirmação de upload no Drive.</div>
+    </div>
+  </div></div>
+</div>
+
+<!-- SCREENSHOT 3: Enviando -->
+<div>
+  <div class="shot-label">Screenshot 3 — Enviando</div>
+  <div class="phone"><div class="screen">
+    <div class="sb"><span class="time">9:44</span><span class="icons">▲ ● ▮▮▮</span></div>
+    <div class="ab"><h1>EscolaSync</h1></div>
+    <div class="scroll">
+      <div class="hcard">
+        <h2>📚 EscolaSync</h2>
+        <p>Mova fotos do álbum para o Google Drive</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Conta Google Drive</div>
+        <div class="arow">
+          <div class="av" style="background:#E8F5E9">🟢</div>
+          <div>
+            <div class="aname">escola.backup@gmail.com</div>
+            <div class="badge">✓ Conectado</div>
+          </div>
+        </div>
+      </div>
+      <div class="prog-card">
+        <div class="prog-hdr">
+          <span>⬆ Enviando foto 18/47…</span>
+          <span style="font-weight:600;color:#1565C0">38%</span>
+        </div>
+        <div class="prog-track"><div class="prog-fill" style="width:38%"></div></div>
+        <div style="font-size:10px;color:#90A4AE;margin-top:5px;text-align:center">IMG_20240912_141023.jpg · 3.2 MB</div>
+      </div>
+      <div class="pill-info">📡 Conectado ao Drive — não feche o app</div>
+      <button class="btn-send" style="opacity:.3">📤 Enviando…</button>
+      <div class="warn">⚠ As fotos serão <strong>removidas do celular</strong> somente após confirmação de upload no Drive.</div>
+    </div>
+  </div></div>
+</div>
+
+<!-- SCREENSHOT 4: Concluído -->
+<div>
+  <div class="shot-label">Screenshot 4 — Concluído</div>
+  <div class="phone"><div class="screen">
+    <div class="sb"><span class="time">9:52</span><span class="icons">▲ ● ▮▮▮</span></div>
+    <div class="ab"><h1>EscolaSync</h1></div>
+    <div class="scroll">
+      <div class="hcard">
+        <h2>📚 EscolaSync</h2>
+        <p>Mova fotos do álbum para o Google Drive</p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Conta Google Drive</div>
+        <div class="arow">
+          <div class="av" style="background:#E8F5E9">🟢</div>
+          <div>
+            <div class="aname">escola.backup@gmail.com</div>
+            <div class="badge">✓ Conectado</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="border:1.5px solid #C8E6C9">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
+          <span style="font-size:18px">✅</span>
+          <span style="font-size:13px;font-weight:700;color:#2E7D32">Envio concluído!</span>
+        </div>
+        <div class="result-grid">
+          <div class="result-item" style="background:#E3F2FD">
+            <div class="result-num" style="color:#1565C0">47</div>
+            <div class="result-lbl" style="color:#1565C0">Enviadas</div>
+          </div>
+          <div class="result-item" style="background:#E8F5E9">
+            <div class="result-num" style="color:#2E7D32">47</div>
+            <div class="result-lbl" style="color:#2E7D32">Removidas</div>
+          </div>
+          <div class="result-item" style="background:#FFF8E1">
+            <div class="result-num" style="color:#F57F17">0</div>
+            <div class="result-lbl" style="color:#F57F17">Falhas</div>
+          </div>
+        </div>
+      </div>
+      <div class="pcount" style="margin:0 2px"><div class="dot" style="background:#2E7D32"></div><span style="color:#2E7D32">Álbum vazio — tudo no Drive</span></div>
+      <button class="btn-send">📤 Enviar Agora</button>
+      <div class="warn">⚠ As fotos serão <strong>removidas do celular</strong> somente após confirmação de upload no Drive.</div>
+    </div>
+  </div></div>
+</div>
+
+</body>
+</html>
