@@ -12,12 +12,20 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        var navPage = new NavigationPage(_mainPage)
+        try
         {
-            BarBackgroundColor = Color.FromArgb("#1565C0"),
-            BarTextColor = Colors.White
-        };
-
-        return new Window(navPage);
+            var navPage = new NavigationPage(_mainPage)
+            {
+                BarBackgroundColor = Color.FromArgb("#1565C0"),
+                BarTextColor = Colors.White
+            };
+            return new Window(navPage);
+        }
+        catch (Exception ex)
+        {
+            // Fallback: abre a página diretamente sem NavigationPage
+            Android.Util.Log.Error("EscolaSync", $"CreateWindow falhou: {ex}");
+            return new Window(_mainPage);
+        }
     }
 }

@@ -7,6 +7,7 @@
     <SingleProject>true</SingleProject>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RuntimeIdentifiers>android-arm64;android-arm</RuntimeIdentifiers>
 
     <!-- Define como executável Android, não biblioteca -->
     <OutputType>Exe</OutputType>
@@ -14,8 +15,8 @@
     <!-- App Info -->
     <ApplicationTitle>EscolaSync</ApplicationTitle>
     <ApplicationId>com.escolasync.app</ApplicationId>
-    <ApplicationVersion>2</ApplicationVersion>
-    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+    <ApplicationVersion>5</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
 
     <!-- API 36 para .NET 10 MAUI -->
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>

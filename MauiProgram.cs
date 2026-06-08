@@ -27,6 +27,24 @@ public static class MauiProgram
         builder.Logging.SetMinimumLevel(LogLevel.Debug);
 #endif
 
+
+        // Captura exceções não tratadas
+        AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+        {
+            var ex = args.ExceptionObject as Exception;
+            System.Diagnostics.Debug.WriteLine($"[FATAL] UnhandledException: {ex}");
+            Android.Util.Log.Error("EscolaSync", $"UnhandledException: {ex}");
+        };
+
+        TaskScheduler.UnobservedTaskException += (sender, args) =>
+        {
+            System.Diagnostics.Debug.WriteLine($"[FATAL] UnobservedTask: {args.Exception}");
+            Android.Util.Log.Error("EscolaSync", $"UnobservedTask: {args.Exception}");
+            args.SetObserved();
+        };
+
         return builder.Build();
     }
+
+
 }
