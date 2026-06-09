@@ -7,7 +7,6 @@
     <SingleProject>true</SingleProject>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RuntimeIdentifiers>android-arm64;android-arm</RuntimeIdentifiers>
 
     <!-- Define como executável Android, não biblioteca -->
     <OutputType>Exe</OutputType>
@@ -15,23 +14,28 @@
     <!-- App Info -->
     <ApplicationTitle>EscolaSync</ApplicationTitle>
     <ApplicationId>com.escolasync.app</ApplicationId>
-    <ApplicationVersion>5</ApplicationVersion>
-    <ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
+    <ApplicationVersion>7</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0.7</ApplicationDisplayVersion>
 
     <!-- API 36 para .NET 10 MAUI -->
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
 
-    <!-- Corrige XACAF7009: compressão de assemblies no Release -->
+    <!-- Corrige compressão de assemblies -->
     <AndroidUseAssemblyStore>false</AndroidUseAssemblyStore>
     <AndroidEnableAssemblyCompression>false</AndroidEnableAssemblyCompression>
+    <AndroidStoreUncompressedFileExtensions>.so</AndroidStoreUncompressedFileExtensions>
+
+    <!-- Corrige Fast Deployment / arm64 no emulador e dispositivo físico -->
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <AndroidFastDeployment>false</AndroidFastDeployment>
 
     <!-- Suprime warnings XC0022 de compiled bindings -->
     <NoWarn>$(NoWarn);XC0022</NoWarn>
   </PropertyGroup>
 
-  <!-- Configurações específicas do Release para gerar APK -->
+  <!-- Configurações específicas do Release para gerar AAB -->
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
-    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <AndroidPackageFormat>aab</AndroidPackageFormat>
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
     <AndroidUseAapt2>True</AndroidUseAapt2>
     <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
