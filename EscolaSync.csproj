@@ -14,8 +14,8 @@
     <!-- App Info -->
     <ApplicationTitle>EscolaSync</ApplicationTitle>
     <ApplicationId>com.escolasync.app</ApplicationId>
-    <ApplicationVersion>7</ApplicationVersion>
-    <ApplicationDisplayVersion>1.0.7</ApplicationDisplayVersion>
+    <ApplicationVersion>10</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0.10</ApplicationDisplayVersion>
 
     <!-- API 36 para .NET 10 MAUI -->
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
@@ -35,17 +35,30 @@
 
   <!-- Configurações específicas do Release para gerar AAB -->
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
+
     <AndroidPackageFormat>aab</AndroidPackageFormat>
-    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
-    <AndroidUseAapt2>True</AndroidUseAapt2>
-    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+
+    <!-- Não remover assemblies -->
+    <AndroidLinkMode>None</AndroidLinkMode>
+
+    <!-- Sem obfuscação -->
+    <AndroidEnableProguard>false</AndroidEnableProguard>
+    <AndroidEnableR8>false</AndroidEnableR8>
+
+    <!-- Sem AOT -->
     <RunAOTCompilation>false</RunAOTCompilation>
     <AndroidEnableLLVM>false</AndroidEnableLLVM>
+
+    <!-- Mantém símbolos para diagnosticar crash -->
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+
   </PropertyGroup>
 
   <ItemGroup>
     <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
     <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+	
     <MauiFont Include="Resources\Fonts\*" />
     <MauiImage Include="Resources\Images\*" />
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />

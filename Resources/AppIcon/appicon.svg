@@ -1,1 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="20" fill="#1565C0"/><text x="64" y="90" font-size="80" text-anchor="middle">??</text></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="108" height="108" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fundo azul escuro -->
+  <rect width="108" height="108" rx="24" fill="#1E40AF"/>
+  <!-- Camada inferior mais escura para profundidade -->
+  <rect x="0" y="54" width="108" height="54" rx="0" fill="#1E3A8A" opacity="0.5"/>
+
+  <!-- Pasta (escola) -->
+  <rect x="18" y="56" width="72" height="38" rx="5" fill="none" stroke="#BFDBFE" stroke-width="2.5"/>
+  <rect x="18" y="49" width="32" height="10" rx="3" fill="#93C5FD"/>
+
+  <!-- Seta de upload centralizada -->
+  <line x1="54" y1="78" x2="54" y2="62" stroke="#60A5FA" stroke-width="3" stroke-linecap="round"/>
+  <polyline points="45,70 54,61 63,70" fill="none" stroke="#60A5FA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Nuvem / Drive no canto superior direito -->
+  <ellipse cx="82" cy="28" rx="11" ry="7.5" fill="#60A5FA"/>
+  <ellipse cx="73" cy="32" rx="8" ry="6.5" fill="#60A5FA"/>
+  <ellipse cx="90" cy="33" rx="7.5" ry="5.5" fill="#60A5FA"/>
+  <rect x="64" y="32" width="30" height="7" fill="#60A5FA"/>
+</svg>

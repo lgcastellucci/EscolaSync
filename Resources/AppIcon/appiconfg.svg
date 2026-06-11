@@ -1,1 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><text x="64" y="90" font-size="80" text-anchor="middle">??</text></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="108" height="108" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pasta (escola) — branco/semitransparente para compor sobre qualquer fundo -->
+  <rect x="18" y="56" width="72" height="38" rx="5" fill="none" stroke="white" stroke-width="2.5"/>
+  <rect x="18" y="49" width="32" height="10" rx="3" fill="white" opacity="0.9"/>
+
+  <!-- Seta de upload -->
+  <line x1="54" y1="78" x2="54" y2="62" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  <polyline points="45,70 54,61 63,70" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Nuvem / Drive -->
+  <ellipse cx="82" cy="28" rx="11" ry="7.5" fill="white" opacity="0.85"/>
+  <ellipse cx="73" cy="32" rx="8" ry="6.5" fill="white" opacity="0.85"/>
+  <ellipse cx="90" cy="33" rx="7.5" ry="5.5" fill="white" opacity="0.85"/>
+  <rect x="64" y="32" width="30" height="7" fill="white" opacity="0.85"/>
+</svg>

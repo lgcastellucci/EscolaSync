@@ -1,66 +1,84 @@
-using EscolaSync.Services;
-
 namespace EscolaSync;
 
 public partial class MainPage : ContentPage
 {
-    private readonly MainViewModel _viewModel;
-    private bool _initialized = false;
+    private readonly MainViewModel _vm;
 
-    public MainPage(MainViewModel viewModel)
+    public MainPage(MainViewModel vm)
     {
-        InitializeComponent();
-        _viewModel = viewModel;
-        BindingContext = viewModel;
-    }
+        Android.Util.Log.Debug("ES_BOOT", "30 MainPage() construtor iniciado");
 
-    protected override async void OnAppearing()
-    {
-        base.OnAppearing();
-
-        // Solicita permissões apenas uma vez
-        if (!_initialized)
-        {
-            _initialized = true;
-            await RequestPermissionsAsync();
-
-            // Só carrega álbuns DEPOIS de pedir permissão
-            _viewModel.InitializeAfterPermissions();
-        }
-    }
-
-    private async Task RequestPermissionsAsync()
-    {
         try
         {
-            var readStatus = await Permissions.RequestAsync<Permissions.Media>();
-
-            if (readStatus != PermissionStatus.Granted)
-            {
-                await DisplayAlertAsync(
-                    "Permissão necessária",
-                    "O app precisa de acesso às fotos para funcionar. Conceda a permissão nas configurações do celular.",
-                    "OK");
-            }
+            InitializeComponent();
+            Android.Util.Log.Debug("ES_BOOT", "31 InitializeComponent() OK");
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"[PERM] Erro ao solicitar permissão: {ex.Message}");
+            Android.Util.Log.Error("ES_BOOT", $"31 ERRO InitializeComponent: {ex.GetType().Name}: {ex.Message}");
+            Android.Util.Log.Error("ES_BOOT", $"STACK: {ex.StackTrace}");
+            throw;
+        }
+
+        try
+        {
+            _vm = vm;
+            BindingContext = vm;
+            Android.Util.Log.Debug("ES_BOOT", "32 BindingContext atribuído OK");
+        }
+        catch (Exception ex)
+        {
+            Android.Util.Log.Error("ES_BOOT", $"32 ERRO BindingContext: {ex.GetType().Name}: {ex.Message}");
+            throw;
+        }
+
+        try
+        {
+            vm.LogAdded += OnLogAdded;
+            Android.Util.Log.Debug("ES_BOOT", "33 LogAdded event registrado");
+        }
+        catch (Exception ex)
+        {
+            Android.Util.Log.Error("ES_BOOT", $"33 ERRO LogAdded event: {ex.Message}");
+        }
+
+        Android.Util.Log.Debug("ES_BOOT", "34 MainPage() construtor concluído");
+    }
+
+    protected override void OnAppearing()
+    {
+        Android.Util.Log.Debug("ES_BOOT", "35 MainPage.OnAppearing() chamado");
+        try
+        {
+            base.OnAppearing();
+            Android.Util.Log.Debug("ES_BOOT", "36 base.OnAppearing() OK");
+        }
+        catch (Exception ex)
+        {
+            Android.Util.Log.Error("ES_BOOT", $"36 ERRO base.OnAppearing: {ex.Message}");
+        }
+
+        try
+        {
+            _vm.InitializeAfterPermissions();
+            Android.Util.Log.Debug("ES_BOOT", "37 InitializeAfterPermissions() chamado");
+        }
+        catch (Exception ex)
+        {
+            Android.Util.Log.Error("ES_BOOT", $"37 ERRO InitializeAfterPermissions: {ex.Message}");
         }
     }
 
-    // Botão Enviar — passa a Activity para deletar fotos no Android 11+
-    private async void OnSendButtonClicked(object sender, EventArgs e)
+    private void OnLogAdded()
     {
-        var activity = Platform.CurrentActivity;
-        if (activity == null) return;
-        await _viewModel.SyncAsync(activity);
-    }
-
-    // Recebe resultado do intent de deleção (Android 11+)
-    public static void OnDeleteResult(int resultCode)
-    {
-        MediaStoreService.DeleteResultCallback?.Invoke(resultCode);
-        MediaStoreService.DeleteResultCallback = null;
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            try
+            {
+                await Task.Delay(80);
+                await LogScroll.ScrollToAsync(0, double.MaxValue, false);
+            }
+            catch { /* scroll não crítico */ }
+        });
     }
 }

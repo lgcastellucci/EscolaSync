@@ -1,167 +1,78 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:converters="clr-namespace:EscolaSync.Converters"
              x:Class="EscolaSync.MainPage"
-             Title="EscolaSync"
-             BackgroundColor="{StaticResource Background}">
+             Title="EscolaSync">
 
-    <ContentPage.Resources>
-        <converters:IntToDoubleConverter x:Key="IntToDoubleConverter"/>
-        <converters:StringToColorConverter x:Key="StringToColorConverter"/>
-    </ContentPage.Resources>
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="20" RowSpacing="12">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="16">
+        <!-- STATUS DE AUTENTICAÇÃO -->
+        <Frame Grid.Row="0" Padding="12" CornerRadius="10"
+               BackgroundColor="{Binding AuthStatusColor}">
+            <Grid ColumnDefinitions="Auto,*">
+                <Label Grid.Column="0" Text="●" FontSize="18" VerticalOptions="Center"
+                       TextColor="{Binding AuthDotColor}"/>
+                <Label Grid.Column="1" Text="{Binding AuthStatusText}"
+                       FontSize="13" Margin="8,0,0,0"
+                       VerticalOptions="Center" TextColor="White" FontAttributes="Bold"/>
+            </Grid>
+        </Frame>
 
-            <!-- ── CABEÇALHO ─────────────────────────────────────────────── -->
-            <Frame BackgroundColor="{StaticResource Primary}"
-                   CornerRadius="16" Padding="20" HasShadow="True">
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="📚 EscolaSync"
-                           FontSize="26" FontAttributes="Bold"
-                           TextColor="White" HorizontalOptions="Center"/>
-                    <Label Text="Mova fotos do álbum para o Google Drive"
-                           FontSize="13" TextColor="#B3E5FC"
-                           HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-            </Frame>
+        <!-- BOTÕES -->
+        <HorizontalStackLayout Grid.Row="1" Spacing="10" HorizontalOptions="Center">
+            <Button Text="🔐 Autenticar Drive"
+                    Command="{Binding AuthCommand}"
+                    BackgroundColor="#1E40AF" TextColor="White"
+                    CornerRadius="8" FontSize="13"/>
+            <Button Text="📤 Enviar Agora"
+                    Command="{Binding SyncCommand}"
+                    IsEnabled="{Binding CanSync}"
+                    BackgroundColor="#059669" TextColor="White"
+                    CornerRadius="8" FontSize="13"/>
+        </HorizontalStackLayout>
 
-            <!-- ── CONTA GOOGLE DRIVE ────────────────────────────────────── -->
-            <Frame BackgroundColor="{StaticResource Surface}"
-                   CornerRadius="12" Padding="16" HasShadow="False"
-                   BorderColor="#E0E0E0">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="Conta Google Drive" FontSize="13"
-                           FontAttributes="Bold" TextColor="{StaticResource TextSecondary}"/>
+        <!-- LOG VISUAL — cada passo aparece aqui -->
+        <Frame Grid.Row="2" Padding="0" CornerRadius="10"
+               BackgroundColor="#0F172A" HasShadow="False">
+            <Grid RowDefinitions="Auto,*">
+                <Label Grid.Row="0" Text="📋 Log de execução"
+                       FontSize="12" TextColor="#94A3B8"
+                       Padding="12,8" FontAttributes="Bold"/>
+                <ScrollView Grid.Row="1" x:Name="LogScroll">
+                    <VerticalStackLayout x:Name="LogStack" Padding="12,0,12,12" Spacing="4"
+                                        BindableLayout.ItemsSource="{Binding LogEntries}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Padding="8,5" CornerRadius="6"
+                                       BackgroundColor="{Binding BgColor}" HasShadow="False">
+                                    <Grid ColumnDefinitions="Auto,Auto,*">
+                                        <Label Grid.Column="0" Text="{Binding Icon}"
+                                               FontSize="13" VerticalOptions="Center"/>
+                                        <Label Grid.Column="1" Text="{Binding Time}"
+                                               FontSize="10" TextColor="#64748B"
+                                               VerticalOptions="Center" Margin="6,0"/>
+                                        <Label Grid.Column="2" Text="{Binding Message}"
+                                               FontSize="12" TextColor="{Binding TextColor}"
+                                               VerticalOptions="Center" LineBreakMode="WordWrap"/>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </ScrollView>
+            </Grid>
+        </Frame>
 
-                    <Label Text="{Binding AccountLabel}" FontSize="15"
-                           TextColor="{StaticResource TextPrimary}"/>
-
-                    <Button Text="🔐 Entrar com Google"
-                            Command="{Binding LoginCommand}"
-                            IsVisible="{Binding IsNotAuthenticated}"
-                            BackgroundColor="{StaticResource Primary}"
-                            TextColor="White" CornerRadius="8"
-                            FontSize="14" IsEnabled="{Binding IsNotBusy}"/>
-
-                    <Button Text="🚪 Sair da conta"
-                            Command="{Binding LogoutCommand}"
-                            IsVisible="{Binding IsAuthenticated}"
-                            BackgroundColor="Transparent"
-                            TextColor="{StaticResource Error}"
-                            BorderColor="{StaticResource Error}"
-                            BorderWidth="1" CornerRadius="8"
-                            FontSize="13" IsEnabled="{Binding IsNotBusy}"/>
-                </VerticalStackLayout>
-            </Frame>
-
-            <!-- ── SELEÇÃO DE ÁLBUM ──────────────────────────────────────── -->
-            <Frame BackgroundColor="{StaticResource Surface}"
-                   CornerRadius="12" Padding="16" HasShadow="False"
-                   BorderColor="#E0E0E0">
-                <VerticalStackLayout Spacing="10">
-
-                    <Grid ColumnDefinitions="*,Auto">
-                        <Label Grid.Column="0"
-                               Text="Álbum de origem" FontSize="13"
-                               FontAttributes="Bold"
-                               TextColor="{StaticResource TextSecondary}"
-                               VerticalOptions="Center"/>
-                        <Button Grid.Column="1"
-                                Text="↺" FontSize="16"
-                                Command="{Binding RefreshAlbumsCommand}"
-                                BackgroundColor="Transparent"
-                                TextColor="{StaticResource Primary}"
-                                Padding="4" HeightRequest="36" WidthRequest="36"
-                                IsEnabled="{Binding IsNotBusy}"/>
-                    </Grid>
-
-                    <Picker ItemsSource="{Binding Albums}"
-                            SelectedItem="{Binding SelectedAlbum}"
-                            Title="Selecione o álbum"
-                            FontSize="15"
-                            TextColor="{StaticResource TextPrimary}"/>
-
-                    <Label Text="{Binding PhotoCountLabel}"
-                           FontSize="13"
-                           TextColor="{StaticResource TextSecondary}"/>
-
-                    <!-- Destino no Drive -->
-                    <Frame BackgroundColor="#E3F2FD" CornerRadius="8"
-                           Padding="10" HasShadow="False" BorderColor="#90CAF9">
-                        <HorizontalStackLayout Spacing="6">
-                            <Label Text="📁" FontSize="16" VerticalOptions="Center"/>
-                            <VerticalStackLayout>
-                                <Label Text="Destino no Drive" FontSize="11"
-                                       TextColor="{StaticResource TextSecondary}"/>
-                                <Label Text='Google Drive → pasta "Escola"'
-                                       FontSize="13" FontAttributes="Bold"
-                                       TextColor="{StaticResource Primary}"/>
-                            </VerticalStackLayout>
-                        </HorizontalStackLayout>
-                    </Frame>
-                </VerticalStackLayout>
-            </Frame>
-
-            <!-- ── BOTÃO ENVIAR ──────────────────────────────────────────── -->
-            <Button Text="📤  Enviar Agora"
-                    Clicked="OnSendButtonClicked"
-                    IsEnabled="{Binding IsAuthenticated}"
-                    BackgroundColor="{StaticResource Primary}"
-                    TextColor="White"
-                    CornerRadius="12"
-                    FontSize="17" FontAttributes="Bold"
-                    HeightRequest="56"/>
-
-            <!-- ── PROGRESSO ─────────────────────────────────────────────── -->
-            <Frame IsVisible="{Binding IsBusy}"
-                   BackgroundColor="{StaticResource Surface}"
-                   CornerRadius="12" Padding="16" HasShadow="False"
-                   BorderColor="#E0E0E0">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="{Binding StatusMessage}"
-                           FontSize="13"
-                           TextColor="{StaticResource TextSecondary}"
-                           HorizontalOptions="Center"
-                           HorizontalTextAlignment="Center"/>
-                    <ProgressBar Progress="{Binding Progress, Converter={StaticResource IntToDoubleConverter}}"
-                                 ProgressColor="{StaticResource Primary}"
-                                 HeightRequest="8"/>
-                    <Label Text="{Binding Progress, StringFormat='{0}%'}"
-                           FontSize="12" TextColor="{StaticResource TextSecondary}"
-                           HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-            </Frame>
-
-            <!-- ── STATUS / RESULTADO (quando não busy) ──────────────────── -->
-            <Frame IsVisible="{Binding HasStatus}"
-                   CornerRadius="12" Padding="14" HasShadow="False"
-                   BorderColor="Transparent">
-                <Frame.BackgroundColor>
-                    <Binding Path="StatusColor" Converter="{StaticResource StringToColorConverter}"/>
-                </Frame.BackgroundColor>
-                <Label Text="{Binding StatusMessage}"
-                       FontSize="14" TextColor="White"
-                       HorizontalOptions="Center"
-                       HorizontalTextAlignment="Center"/>
-            </Frame>
-
-            <!-- ── AVISO ─────────────────────────────────────────────────── -->
-            <Frame BackgroundColor="#FFF8E1" CornerRadius="10"
-                   Padding="12" HasShadow="False" BorderColor="#FFE082">
-                <Label FontSize="12" TextColor="#5D4037">
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="⚠ " FontAttributes="Bold"/>
-                            <Span Text="As fotos serão "/>
-                            <Span Text="removidas do celular " FontAttributes="Bold"/>
-                            <Span Text="somente após confirmação de upload bem-sucedido no Drive."/>
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
-            </Frame>
-
+        <!-- PROGRESSO -->
+        <VerticalStackLayout Grid.Row="3" Spacing="4">
+            <ProgressBar Progress="{Binding Progress}"
+                         ProgressColor="#60A5FA"
+                         BackgroundColor="#1E3A8A"
+                         HeightRequest="8"/>
+            <Label Text="{Binding ProgressText}"
+                   FontSize="11" TextColor="#94A3B8"
+                   HorizontalOptions="Center"/>
         </VerticalStackLayout>
-    </ScrollView>
+
+    </Grid>
 </ContentPage>

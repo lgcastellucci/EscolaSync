@@ -1,1 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" fill="#1565C0"/><text x="64" y="80" font-size="72" text-anchor="middle" fill="white">??</text></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pasta -->
+  <rect x="20" y="68" width="88" height="46" rx="7" fill="none" stroke="#BFDBFE" stroke-width="3"/>
+  <rect x="20" y="58" width="40" height="14" rx="5" fill="#93C5FD"/>
+
+  <!-- Seta upload -->
+  <line x1="64" y1="92" x2="64" y2="73" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+  <polyline points="53,82 64,71 75,82" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Nuvem / Drive -->
+  <ellipse cx="96" cy="33" rx="14" ry="9.5" fill="#60A5FA"/>
+  <ellipse cx="85" cy="38" rx="10" ry="8" fill="#60A5FA"/>
+  <ellipse cx="107" cy="39" rx="9" ry="7" fill="#60A5FA"/>
+  <rect x="75" y="38" width="36" height="9" fill="#60A5FA"/>
+</svg>
